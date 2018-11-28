@@ -11,18 +11,25 @@ class BooksApp extends React.Component {
   }
 
   componentDidMount() {
+    this._isMounted = true;
     this.getAll();
   }
 
   getAll = () => {
     BooksAPI.getAll().then(books => {
-      this.setState({
-        books
-      })
+      if(this._isMounted) {
+        this.setState({
+          books
+        })
+      }
     })
   }
   reloadBooks = () => {
     this.getAll()
+  }
+
+  componentWillUnmount = () => {
+    this._isMounted = false;
   }
   render() {
     return (

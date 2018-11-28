@@ -22,14 +22,14 @@ class BookShelfChange extends Component {
   handleShelf = (event) => {
     // 在异步回调函数中event对象将被重置为0,所以这里提前把值赋给val
     const val = event.target.value;
+    const self = this;
+    this.setState({
+      shelf: val
+    })
     BooksAPI.update(this.props.book, val).then((data) => {
-      if (this._isMounted) {
-        // 不要在setState函数中使用event对象，因为setState并不保证是同步处理
-        this.setState({
-          shelf: val
-        })
-        this.props.reloadBooks()
-      }
+        if(this._isMounted) {
+          self.props.reloadBooks()
+        }
     })
   }
 

@@ -1,9 +1,7 @@
 import React, {Component} from 'react'
 import {Link} from 'react-router-dom'
 import PropTypes from 'prop-types'
-import CurrentlyReadingShelf from './CurrentlyReadingShelf'
-import WantToReadShelf from './WantToReadShelf'
-import ReadShelf from './ReadShelf'
+import BookShelf from './BookShelf'
 class ListBooks extends Component {
   // 对传入ListBooks组件的props属性进行检测
   static propTypes = {
@@ -12,6 +10,16 @@ class ListBooks extends Component {
   }
 
   render() {
+    const bookShelfTitles = [
+      'Currently Reading',
+      'Read',
+      'Want to Read'
+    ];
+    const filterData = [
+      'currentlyReading',
+      'wantToRead',
+      'read'
+    ]
     return (
       <div className="list-books">
         <div className="list-books-title">
@@ -19,15 +27,14 @@ class ListBooks extends Component {
         </div>
         <div className="list-books-content">
           <div>
-            <CurrentlyReadingShelf books={this.props.books.filter((book) => {
-              return book.shelf === 'currentlyReading'
-            })} reloadBooks={this.props.reloadBooks}></CurrentlyReadingShelf>
-            <WantToReadShelf books={this.props.books.filter((book) => {
-              return book.shelf === 'wantToRead'
-            })} reloadBooks={this.props.reloadBooks}></WantToReadShelf>
-            <ReadShelf books={this.props.books.filter((book) => {
-              return book.shelf === 'read'
-            })} reloadBooks={this.props.reloadBooks}></ReadShelf>
+            {bookShelfTitles.map((shelfTitle, index) => {
+              return (
+                <BookShelf key={shelfTitle} books={this.props.books.filter((book) => {
+              return book.shelf === filterData[index]
+            })} reloadBooks={this.props.reloadBooks} bookShelfTitle={bookShelfTitles[index]}></BookShelf>
+              )
+            }
+            )}
           </div>
         </div>
         <div className="open-search">

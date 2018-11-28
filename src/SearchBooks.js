@@ -12,34 +12,29 @@ class SearchBooks extends Component {
     query: '',
     books: []
   }
-
+  componentDidMount() {
+    this._isMounted = true;
+  }
   handleBooks = (event) => {
     const query = event.target.value
-    BooksAPI.search(query).then(books => {
-      if (this._isMounted) {
-         this.setState({
-          query,
-          books
-        })
-      }
+    this.setState({
+      query
     })
-  }
-
-  componentDidMount = () => {
-    this._isMounted = true;
-    BooksAPI.search(this.state.query).then(books => {
-      this.setState({
-        books
+    if (query !== '') {
+      BooksAPI.search(query).then(books => {
+        if(this._isMounted) {
+           this.setState({
+            books
+          })
+        }
       })
-    })
+    }
   }
 
   componentWillUnmount = () => {
-      this._isMounted = false;
+    this._isMounted = false;
   }
-
   render() {
-    console.log(this.state.books)
     return (
       <div className="search-books">
         <div className="search-books-bar">
@@ -52,16 +47,14 @@ class SearchBooks extends Component {
         </div>
         <div className="search-books-results">
           {
-            (this.state.query && this.state.books.length > 0) ? (
+            this.state.query && this.state.books && !this.state.books.error && (
               <ol className="books-grid">
-              {this.state.query && this.state.books && this.state.books.map((book) => (
+                {this.state.books.map((book) => (
                 <li key={book.id}>
                   <Book book={book} reloadBooks={this.props.reloadBooks}></Book>
                 </li>
               ))}
               </ol>
-            ) : (
-              <ol className="books-grid"></ol>
             )
           }
         </div>
